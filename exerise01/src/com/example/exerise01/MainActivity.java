@@ -33,6 +33,10 @@ public class MainActivity extends Activity {
 				Intent intent =new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse("http://www.baidu.com"));
 				startActivity(intent);
+				//hello
+				
+				
+				Intent intent1 =new Intent(Intent.ACTION_VIEW);
 				
 			}
 		});
