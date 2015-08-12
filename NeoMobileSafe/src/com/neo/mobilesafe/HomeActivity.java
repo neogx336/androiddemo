@@ -88,7 +88,9 @@ public class HomeActivity extends Activity {
 					break;
 				case 8:
 					Intent intent =new Intent(HomeActivity.this,SettingActivity.class);
-					startActivity(intent);										
+					startActivity(intent);
+					
+					///deesse
 					break;
 
 				default:
