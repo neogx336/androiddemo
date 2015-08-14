@@ -27,6 +27,8 @@ public abstract class BaseSetupActivity extends Activity {
 			
 				//手指移动的逻辑
 				
+				//更新1
+				
 				//1.滑得太慢的时候
 				if (Math.abs(velocityX)<200) {
 					Toast.makeText(getApplicationContext(), "滑动得太慢", Toast.LENGTH_SHORT).show();
