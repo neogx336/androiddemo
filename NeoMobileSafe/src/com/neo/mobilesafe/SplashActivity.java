@@ -113,6 +113,7 @@ public class SplashActivity extends Activity {
 			case NETWORK_ERROR:	
 				Toast.makeText(getApplicationContext(), "网络错误", Toast.LENGTH_LONG).show();
 				//tv_state.setText("网络错误");
+				enterHome();
 				break;
 			case ENTER_HOME:
 				//tv_state.setText("进入主界面");

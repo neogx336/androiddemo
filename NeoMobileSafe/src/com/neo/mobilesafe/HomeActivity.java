@@ -143,6 +143,10 @@ public class HomeActivity extends Activity {
 			if (password.equals(savePassword)) {
 				Toast.makeText(HomeActivity.this, "ÃÜÂëÕıÈ·", 1).show();
 				dialog.dismiss();
+				Intent intent =new Intent(HomeActivity.this,Setup1Activity.class);
+				startActivity(intent);
+				
+				
 				return;								
 			}
 			else {

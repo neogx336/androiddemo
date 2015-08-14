@@ -68,10 +68,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/presence_invisible" />
-          
-            
             
         </LinearLayout>
+        <RelativeLayout 
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"			
+            >
+            
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/setup1"
+                android:layout_centerInParent="true"
+                />
+                <Button 
+           style="@style/button_next_style"
+            />
+            
+        </RelativeLayout>
+    
     
 
     
