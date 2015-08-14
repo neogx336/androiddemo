@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:neo="http://schemas.android.com/apk/res/com.neo.mobilesafe"
     android:layout_width="match_parent"
@@ -11,26 +12,28 @@
         android:layout_height="55dip"
         android:background="#8866ff00"
         android:gravity="center"
-        android:text="2.手机卡绑定"
+        android:text="3.设置安全号码"
         android:textColor="#000000"
         android:textSize="22sp" />
 
     <TextView
         style="@style/text_content_style"
-        android:text="通过绑定sim:" />
-
-    <TextView
-        style="@style/text_content_style"
-        android:text="下次重启手机如果发现sim变化\n就会发送报警短信" />
-
-    <com.neo.mobilesafe.ui.SettingItemView
-        android:id="@+id/siv_setup2_sim"
-        android:layout_width="wrap_content"
+        android:text="sim卡变更后\n报警短信会发给安全号码" />
+    
+    <EditText 
+        android:id="@+id/et_setup3_phone"
+        android:hint="请输入电话号码"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        neo:desc_off="sim卡没有绑定"
-        neo:desc_on="sim卡已绑定"
-        neo:title="点击绑定sim卡" >
-    </com.neo.mobilesafe.ui.SettingItemView>
+        />
+    
+    <Button 
+        android:onClick="selectContact"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="选择联系人"
+        android:background="@drawable/button_bg"
+        /> 
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -46,12 +49,12 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/presence_online" />
+            android:src="@android:drawable/presence_invisible" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_online" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -67,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/bind" />
+            android:src="@drawable/phone" />
 
         <Button style="@style/button_pre_style" />
 

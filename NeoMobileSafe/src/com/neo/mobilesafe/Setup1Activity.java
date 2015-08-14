@@ -25,7 +25,6 @@ public class Setup1Activity  extends BaseSetupActivity{
 		// TODO Auto-generated method stub
 		Intent intent =new Intent(this, Setup2Activity.class);
 		startActivity(intent);
-		finish();
 		
 	}
 	
