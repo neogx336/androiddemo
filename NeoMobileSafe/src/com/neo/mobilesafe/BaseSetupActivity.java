@@ -1,96 +1,97 @@
 package com.neo.mobilesafe;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.widget.Toast;
 
 public abstract class BaseSetupActivity extends Activity {
-	// 定义一个手势识别器
+	// 1.定义一个手势识别器
 	private GestureDetector detector;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		
-		detector =new GestureDetector(this, new SimpleOnGestureListener()
-		{
-			
-			
+		// 2.实例化这个手势识别器
+		detector = new GestureDetector(this, new SimpleOnGestureListener() {
+			/**
+			 * 当我们的手指在上面滑动的时候回调
+			 */
 			@Override
-			public boolean onFling (MotionEvent e1, MotionEvent e2,
-					float velocityX, float velocityY){
-			
-				//手指移动的逻辑
-				
-				//更新1
-				
-				//1.滑得太慢的时候
-				if (Math.abs(velocityX)<200) {
-					Toast.makeText(getApplicationContext(), "滑动得太慢", Toast.LENGTH_SHORT).show();
+			public boolean onFling(MotionEvent e1, MotionEvent e2,
+					float velocityX, float velocityY) {
+
+				// 屏蔽在X滑动很慢的情形
+
+				if (Math.abs(velocityX) < 200) {
+					Toast.makeText(getApplicationContext(), "滑动得太慢了", 0).show();
 					return true;
 				}
-				//2.斜滑的时候
-				if (Math.abs(e1.getRawY()-e2.getY())<100) {
-					Toast.makeText(getApplicationContext(), "滑动得太慢", Toast.LENGTH_SHORT).show();					return true;
-					
+
+				// 屏蔽斜滑这种情况
+				if (Math.abs((e2.getRawY() - e1.getRawY())) > 100) {
+					Toast.makeText(getApplicationContext(), "不能这样滑", 0).show();
+
+					return true;
 				}
-				
-				//3.由右向左滑   R--F
-				if ((e2.getRawX()-e1.getRawX())<200) {
-					Toast.makeText(getApplicationContext(), "由右向左滑   R--F", Toast.LENGTH_SHORT).show();					return true;
-					
+
+				if ((e2.getRawX() - e1.getRawX()) > 200) {
+					// 显示上一个页面：从左往右滑动
+					System.out.println("显示上一个页面：从左往右滑动");
+					Toast.makeText(getApplicationContext(), "显示上一个页面：L--R", 0).show();
+
+					showPre();
+					return true;
+
 				}
-				
-				//4.由左向右滑  L--R
-				if ((e1.getRawX()-e2.getRawX())<200) {
-					Toast.makeText(getApplicationContext(), "由右向左滑   R--F", Toast.LENGTH_SHORT).show();					return true;
-					
-					
+
+				if ((e1.getRawX() - e2.getRawX()) > 200) {
+					// 显示下一个页面：从右往左滑动
+					System.out.println("显示下一个页面：从右往左滑动");
+					Toast.makeText(getApplicationContext(), "显示下一个页面：R--F", 0).show();
+					showNext();
+					return true;
 				}
+
 				return super.onFling(e1, e2, velocityX, velocityY);
-				
-			
-				
 			}
-			
-			
+
 		});
-		
-		
-		
 	}
 
-	/**
-	 * 按钮事件 【上一步】
-	 */
+	public abstract void showNext();
 
+	public abstract void showPre();
+
+	/**
+	 * 下一步的点击事件
+	 * 
+	 * @param view
+	 */
 	public void btn_next(View view) {
 		showNext();
 
 	}
 
 	/**
-	 * 按钮事件 【下一步】
+	 * 上一步
+	 * 
+	 * @param view
 	 */
 	public void btn_pre(View view) {
 		showPre();
+
 	}
 
-	/**
-	 * 抽出来的方法用上一步
-	 * 
-	 */
-
-	public abstract void showPre();
-
-	/**
-	 * 抽出来的方法用下一步
-	 */
-	public abstract void showNext();
-
+	// 3.使用手势识别器
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		detector.onTouchEvent(event);
+		return super.onTouchEvent(event);
+	}
 }

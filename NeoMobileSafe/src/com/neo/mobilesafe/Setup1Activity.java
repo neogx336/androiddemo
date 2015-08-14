@@ -1,5 +1,6 @@
 package com.neo.mobilesafe;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 public class Setup1Activity  extends BaseSetupActivity{
@@ -22,6 +23,9 @@ public class Setup1Activity  extends BaseSetupActivity{
 	@Override
 	public void showNext() {
 		// TODO Auto-generated method stub
+		Intent intent =new Intent(this, Setup2Activity.class);
+		startActivity(intent);
+		finish();
 		
 	}
 	
