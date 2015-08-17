@@ -1,13 +1,12 @@
 package com.neo.mobilesafe;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.widget.Toast;
 
 public abstract class BaseSetupActivity extends Activity {
@@ -29,29 +28,22 @@ public abstract class BaseSetupActivity extends Activity {
 			@Override
 			public boolean onFling(MotionEvent e1, MotionEvent e2,
 					float velocityX, float velocityY) {
-
 				// 屏蔽在X滑动很慢的情形
-
 				if (Math.abs(velocityX) < 200) {
 					Toast.makeText(getApplicationContext(), "滑动得太慢了", 0).show();
 					return true;
 				}
-
 				// 屏蔽斜滑这种情况
 				if (Math.abs((e2.getRawY() - e1.getRawY())) > 100) {
 					Toast.makeText(getApplicationContext(), "不能这样滑", 0).show();
-
 					return true;
 				}
-
 				if ((e2.getRawX() - e1.getRawX()) > 200) {
 					// 显示上一个页面：从左往右滑动
 					System.out.println("显示上一个页面：从左往右滑动");
 					Toast.makeText(getApplicationContext(), "显示上一个页面：L--R", 0).show();
-
 					showPre();
 					return true;
-
 				}
 
 				if ((e1.getRawX() - e2.getRawX()) > 200) {
@@ -61,7 +53,6 @@ public abstract class BaseSetupActivity extends Activity {
 					showNext();
 					return true;
 				}
-
 				return super.onFling(e1, e2, velocityX, velocityY);
 			}
 
@@ -79,7 +70,6 @@ public abstract class BaseSetupActivity extends Activity {
 	 */
 	public void btn_next(View view) {
 		showNext();
-
 	}
 
 	/**
@@ -89,7 +79,6 @@ public abstract class BaseSetupActivity extends Activity {
 	 */
 	public void btn_pre(View view) {
 		showPre();
-
 	}
 
 	// 3.使用手势识别器

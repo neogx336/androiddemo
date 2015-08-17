@@ -4,15 +4,19 @@ package com.neo.mobilesafe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class Setup3Activity extends BaseSetupActivity {
+	
+	 private EditText et_setup3_phone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setup3);
+		et_setup3_phone=(EditText) findViewById(R.id.et_setup3_phone);
 	}
 
 	@Override
@@ -44,14 +48,28 @@ public class Setup3Activity extends BaseSetupActivity {
 		Intent intent =new Intent (this,Setup4Activity.class);
 		startActivity(intent);
 		finish();
-		
 		overridePendingTransition(R.anim.tran_in, R.anim.tran_out);
 		
 	}
 	
 	public void selectContact( View view) {
-		Toast.makeText(getApplicationContext(), "333", 1).show();		
+		Toast.makeText(getApplicationContext(), "333", 1).show();	
+		Intent intent =new Intent(this,SelectContactActivity.class);
+		startActivityForResult(intent, 0);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data==null) {
+			return;
+		}
+		String phoneString=data.getStringExtra("phone").replace("-", "");
+		et_setup3_phone.setText(phoneString);
+		
+	}
+	
 	
 	
 
