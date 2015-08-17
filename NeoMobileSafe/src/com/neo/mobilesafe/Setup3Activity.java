@@ -9,6 +9,19 @@ import android.widget.Toast;
 
 public class Setup3Activity extends BaseSetupActivity {
 	
+	/**
+	 * day3未完成功能
+	 * 1.短信拒绝实现
+	 * 2.视频15 一KEY锁
+	 * 
+	 * 要按视频的顺序写代码，不然会乱
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	
 	 private EditText et_setup3_phone;
 
 	@Override
@@ -69,6 +82,8 @@ public class Setup3Activity extends BaseSetupActivity {
 		et_setup3_phone.setText(phoneString);
 		
 	}
+	
+	
 	
 	
 	
