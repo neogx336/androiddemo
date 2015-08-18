@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="8"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -40,6 +40,9 @@
         <activity android:name="com.neo.mobilesafe.Setup3Activity" />
         <activity android:name="com.neo.mobilesafe.Setup4Activity" />
         <activity android:name="com.neo.mobilesafe.SelectContactActivity" />
+        <activity android:name="com.neo.mobilesafe.AtoolsActivity" />
+        
+        <activity android:name="com.neo.mobilesafe.NumberAddressQueryActivity" />
         
         <service android:name="com.neo.mobilesafe.service.GPSService" />
         <receiver android:name="com.neo.mobilesafe.receiver.BootCompleteReceiver" >
