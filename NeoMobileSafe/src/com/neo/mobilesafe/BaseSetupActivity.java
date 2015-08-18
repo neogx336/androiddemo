@@ -13,7 +13,8 @@ public abstract class BaseSetupActivity extends Activity {
 	// 1.定义一个手势识别器
 	private GestureDetector detector;
 	protected SharedPreferences sp;
-	
+	//back_branch  1111
+	//bak_brach
 	//master 
 	
 
