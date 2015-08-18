@@ -14,6 +14,8 @@ public abstract class BaseSetupActivity extends Activity {
 	private GestureDetector detector;
 	protected SharedPreferences sp;
 	
+	//master 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
