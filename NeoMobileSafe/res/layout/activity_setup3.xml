@@ -28,6 +28,7 @@
         />
     
     <Button 
+        android:id="@+id/et_setup3_phone"
         android:onClick="selectContact"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
