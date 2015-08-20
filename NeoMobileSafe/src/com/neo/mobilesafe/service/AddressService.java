@@ -1,15 +1,122 @@
 package com.neo.mobilesafe.service;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
+import com.neo.mobilesafe.db.dao.NumberAddressQueryUtils;
 
-public class AddressService  extends Service{
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.IBinder;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.view.View;
+/*
+ * 本服务应该完成的功能描述
+ * 1.当来电时使用自定义TOAST来展现归属地的地方，当挂电时取消显示
+ * 2.抽出一个开关了配置服务的开关状态
+ * 
+ * 运用到的知识
+ * 1.windownmanager 
+ * 2.自定义TOAST  参考系统toast的编写模式
+ * 
+ */
+import android.view.WindowManager;
+
+public class AddressService extends Service {
+
+	/**
+	 * 窗体管理者
+	 * 
+	 */
+	private WindowManager wm;
+	private View view;
+
+	/**
+	 * 电话服务
+	 * 
+	 */
+	private TelephonyManager tm;
+	private MyListenerPhone listenerPhone;
+	private OutCallReceiver receiver;
+
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		// 监听业电
+		tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		listenerPhone = new MyListenerPhone();
+		tm.listen(listenerPhone, PhoneStateListener.LISTEN_CALL_STATE);
+
+		// 用代码去注册广播接收者
+		receiver = new OutCallReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.intent.action.NEW_OUTGOING_CALL");
+		registerReceiver(receiver, filter);
+
+		// 实例化窗体
+		wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	class MyListenerPhone extends PhoneStateListener {
+
+		@Override
+		public void onCallStateChanged(int state, String incomingNumber) {
+			// TODO Auto-generated method stub
+			super.onCallStateChanged(state, incomingNumber);
+			switch (state) {
+			case TelephonyManager.CALL_STATE_RINGING:// 来电铃声响起
+				String address = NumberAddressQueryUtils
+						.queryNumber(incomingNumber);
+				myToast(address);
+				break;
+			case TelephonyManager.CALL_STATE_IDLE:// 电话的空闲状态：挂电话，来电拒绝
+				if (view != null) {
+					wm.removeView(view);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+	}
+
+	class OutCallReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			//这就是我们拿到的播出去的电话号码
+			String phoneString = getResultData();
+			//查数据库
+			String address = NumberAddressQueryUtils.queryNumber(phoneString);
+			
+			myToast(address);
+		}
+	}
+
+	public void myToast(String address) {
+		
+		
+		
+
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(receiver);
+		receiver = null;
 	}
 
 }
