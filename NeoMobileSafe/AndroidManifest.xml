@@ -46,6 +46,7 @@
         <activity android:name="com.neo.mobilesafe.NumberAddressQueryActivity" />
         
         <service android:name="com.neo.mobilesafe.service.GPSService" />
+        <service android:name="com.neo.mobilesafe.service.AddressService" />
         <receiver android:name="com.neo.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

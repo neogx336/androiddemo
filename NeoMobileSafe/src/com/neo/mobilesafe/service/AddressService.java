@@ -119,6 +119,7 @@ public class AddressService extends Service {
 				R.drawable.call_locate_gray, R.drawable.call_locate_green };
 		SharedPreferences spPreferences=getSharedPreferences("config", MODE_PRIVATE);
 		view.setBackgroundResource(ids[spPreferences.getInt("which", 0)]);
+		textView.setText(address);//加载号码
 		
 		
 		//窗体参数设置，参考系统的TOAST的写法

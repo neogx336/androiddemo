@@ -36,9 +36,11 @@ public class SettingClickView extends RelativeLayout {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 		initView(context);
-		String title=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.itheima.mobilesafe", "title");
-		 desc_on=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.itheima.mobilesafe", "desc_on");
-		 desc_off=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.itheima.mobilesafe", "desc_off");
+		String title=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.neo.mobilesafe", "title");
+		 desc_on=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.neo.mobilesafe", "desc_on");
+		 desc_off=attrs.getAttributeValue("http://schemas.android.com/apk/res/com.neo.mobilesafe", "desc_off");
+		 tv_title.setText(title);
+		 setDesc(desc_off);
 		
 	}
 
@@ -70,9 +72,16 @@ public class SettingClickView extends RelativeLayout {
 		}
 	}
 
-	private void setDesc(String title) {
+	public void setDesc(String title) {
 		// TODO Auto-generated method stub
 		tv_desc.setText(title);
 		
 	}
+	
+	public void  setTitle(String title) {
+		tv_title.setText(title);
+		
+	}
+	
+	
 }
