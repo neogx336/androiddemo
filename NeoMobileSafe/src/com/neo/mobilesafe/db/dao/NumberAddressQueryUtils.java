@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class NumberAddressQueryUtils {
 	private static String path = "data/data/com.neo.mobilesafe/files/address.db";
+//	adb push F:\BaiduYunDownload\手机卫士\day4\day4\数据库\address.db data/data/com.itheima.mobilesafe/files/
 
 	public static String queryNumber(String number) {
 		String address = number;
@@ -12,7 +13,7 @@ public class NumberAddressQueryUtils {
 		SQLiteDatabase database = SQLiteDatabase.openDatabase(path, null,
 				SQLiteDatabase.OPEN_READONLY);
 		String sqlString="select location from data2 where id = (select outkey from data1 where id = ?)";
-		if (number.matches("^1[34568]\\{9}$")) {
+		if (number.matches("^1[34568]\\d{9}$")) {
 			Cursor cursor = database
 					.rawQuery(
 							sqlString,

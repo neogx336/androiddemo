@@ -1,5 +1,7 @@
 package com.neo.mobilesafe.service;
 
+import com.neo.mobilesafe.R;
+import com.neo.mobilesafe.R.id;
 import com.neo.mobilesafe.db.dao.NumberAddressQueryUtils;
 
 import android.app.Service;
@@ -7,6 +9,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -22,6 +26,7 @@ import android.view.View;
  * 
  */
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class AddressService extends Service {
 
@@ -105,16 +110,40 @@ public class AddressService extends Service {
 	}
 
 	public void myToast(String address) {
+		view=View.inflate(this, R.layout.address_show, null);
+		TextView textView=(TextView) view.findViewById(R.id.tv_address);
+		
+		// "半透明","活力橙","卫士蓝","金属灰","苹果绿"
+		int[] ids = { R.drawable.call_locate_white,
+				R.drawable.call_locate_orange, R.drawable.call_locate_blue,
+				R.drawable.call_locate_gray, R.drawable.call_locate_green };
+		SharedPreferences spPreferences=getSharedPreferences("config", MODE_PRIVATE);
+		view.setBackgroundResource(ids[spPreferences.getInt("which", 0)]);
 		
 		
+		//窗体参数设置，参考系统的TOAST的写法
+		WindowManager.LayoutParams params=new WindowManager.LayoutParams();
+		params.width=WindowManager.LayoutParams.WRAP_CONTENT;
+		params.height=WindowManager.LayoutParams.WRAP_CONTENT;
+		params.flags =WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+									|WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+									|WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 		
-
+		params.format=PixelFormat.TRANSLUCENT;
+		params.type=WindowManager.LayoutParams.TYPE_TOAST;
+		wm.addView(view, params);
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		
+		//取消监听来电
+		tm.listen(listenerPhone, PhoneStateListener.LISTEN_NONE);
+		listenerPhone=null;
+		
+		//用代码消取广播接收者
 		unregisterReceiver(receiver);
 		receiver = null;
 	}

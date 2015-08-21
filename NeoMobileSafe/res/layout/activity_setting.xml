@@ -20,6 +20,12 @@
          android:id="@+id/siv_update"
          >
       </com.neo.mobilesafe.ui.SettingItemView>
+      
+         <com.neo.mobilesafe.ui.SettingClickView
+        android:id="@+id/scv_changebg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </com.neo.mobilesafe.ui.SettingClickView>
      
     
 </LinearLayout>

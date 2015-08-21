@@ -1,16 +1,21 @@
 package com.neo.mobilesafe;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.neo.mobilesafe.utils.StreamTools;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -72,6 +77,9 @@ public class SplashActivity extends Activity {
 		tv_update_info = (TextView) findViewById(R.id.tv_update_info);
 		tv_splash_version.setText("版本" + getVersionName());
 		boolean update = sp.getBoolean("update", false);
+		
+		//拷贝数据库
+		copyDB();
 
 		if (update) {
 			checkUpdate();
@@ -194,6 +202,42 @@ public class SplashActivity extends Activity {
 		}.start();
 	}
 
+	
+	private void copyDB() {
+		//只要你拷贝了一次，我就不要你再拷贝了
+		try {
+			File file = new File(getFilesDir(), "address.db");
+			if(file.exists()&&file.length()>0){
+				//正常了，就不需要拷贝了
+				Log.i(TAG, "正常了，就不需要拷贝了");
+			}else{
+				
+				Toast.makeText(this, "正在COPYING", Toast.LENGTH_LONG).show();
+				InputStream is = getAssets().open("address.db");
+				
+				FileOutputStream fos = new FileOutputStream(file);
+				byte[] buffer = new byte[1024];
+				int len = 0;
+				while((len = is.read(buffer))!= -1){
+					fos.write(buffer, 0, len);
+					Log.i(TAG, "----"+len+"----");
+				}
+				is.close();
+				fos.flush();
+				fos.close();
+				Toast.makeText(this, "COPYING成功！", Toast.LENGTH_LONG).show();
+			}
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Toast.makeText(this, "COPYING失败！！！！！！！！！！", Toast.LENGTH_LONG).show();
+			 e.printStackTrace();
+		}
+	}
+	
+	
+	
 	protected void showUpdateDialog() {
 		// TODO Auto-generated method stub
 		AlertDialog.Builder builder = new Builder(SplashActivity.this);
