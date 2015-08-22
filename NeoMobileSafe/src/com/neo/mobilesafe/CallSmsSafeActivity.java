@@ -2,13 +2,15 @@ package com.neo.mobilesafe;
 
 import java.util.List;
 
-import com.neo.mobilesafe.db.dao.BlackNumberDao;
-import com.neo.mobilesafe.domain.BlackNumberInfo;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -17,6 +19,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.neo.mobilesafe.db.dao.BlackNumberDao;
+import com.neo.mobilesafe.domain.BlackNumberInfo;
 /**
  * 
  * 黑名单添加页面
@@ -85,7 +91,7 @@ public class CallSmsSafeActivity extends Activity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			//1.优化对像
 			View view;
 			ViewHolder holder;
@@ -118,16 +124,31 @@ public class CallSmsSafeActivity extends Activity {
 			else{
 				holder.tv_mode.setText("全部拦截");
 			}
-
 			
-			
-			
-			
-			
-			
-			return null;
+			holder.iv_delete.setOnClickListener(new OnClickListener() {
+				
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					AlertDialog.Builder builder=new Builder(CallSmsSafeActivity.this);
+					builder.setTitle("警告");
+					builder.setMessage("确定要删除记录?");
+					builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dao.delete(infos.get(position).getNumber());
+							infos.remove(position);
+							adapter.notifyDataSetChanged();
+						}
+					});
+					builder.setNegativeButton("取消", null);
+					builder.show();
+				}
+			});
+			return view;
 		}
-		
 	}
 
 	//Holder类
@@ -140,6 +161,68 @@ public class CallSmsSafeActivity extends Activity {
 	
 	//弹出添加号码对的自定义对话框
 	public void addBlackNumber(View view) {
+		AlertDialog.Builder builder=new Builder(this);
+		final AlertDialog dialog =builder.create();
+		View contentView=View.inflate(this, R.layout.dialog_add_blacknumber, null);
+		et_blacknumber=(EditText) contentView.findViewById(R.id.et_blacknumber);
+		cb_phone=(CheckBox) contentView.findViewById(R.id.cb_phone);
+		cb_sms=(CheckBox) contentView.findViewById(R.id.cb_sms);
+		bt_cancel=(Button) contentView.findViewById(R.id.cancel);
+		bt_ok=(Button) contentView.findViewById(R.id.ok);
+		dialog.setView(contentView,0,0,0,0);
+		dialog.show();
+		
+		bt_cancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		
+
+	
+		
+		
+	
+		bt_ok.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String blacknumber=et_blacknumber.getText().toString().trim();
+				if (TextUtils.isEmpty(blacknumber)) {
+					Toast.makeText(getApplicationContext(), "黑名单号码不能变空",  Toast.LENGTH_LONG).show();
+					return;
+				}
+				String mode;
+				if (cb_phone.isChecked()&&cb_sms.isChecked()) {
+					//全部拦截
+					mode="3";
+				}
+				else if (cb_phone.isChecked()) {
+					//电话拦截
+					mode="1";
+				}
+				else if (cb_sms.isChecked()) {
+					//短信拦截
+					mode="2";
+				}
+				else {
+					Toast.makeText(getApplicationContext(), "选择拦截模式", Toast.LENGTH_LONG).show();
+					return;
+				}
+				dao.add(blacknumber, mode);
+				BlackNumberInfo info =new BlackNumberInfo();
+				info.setMode(mode);
+				info.setNumber(blacknumber);
+				infos.add(0,info);
+				//通知Listview 数据适配器数据更新
+				adapter.notifyDataSetChanged();
+				dialog.dismiss();
+			}
+		});
+		
+		
 		
 		
 	}
