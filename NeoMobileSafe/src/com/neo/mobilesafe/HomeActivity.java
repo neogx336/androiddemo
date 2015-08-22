@@ -72,6 +72,8 @@ public class HomeActivity extends Activity {
 					showLostFindDialog();
 					break;
 				case 1:
+					Intent intent1=new Intent(HomeActivity.this, CallSmsSafeActivity.class);
+					startActivity(intent1);
 					break;
 				case 2:
 					break;

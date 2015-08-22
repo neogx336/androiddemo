@@ -43,6 +43,7 @@
         <activity android:name="com.neo.mobilesafe.Setup4Activity" />
         <activity android:name="com.neo.mobilesafe.SelectContactActivity" />
         <activity android:name="com.neo.mobilesafe.AtoolsActivity" />
+        <activity android:name="com.neo.mobilesafe.CallSmsSafeActivity" />
         
         <activity android:name="com.neo.mobilesafe.NumberAddressQueryActivity" />
         
