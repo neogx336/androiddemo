@@ -1,6 +1,7 @@
 package com.neo.mobilesafe;
 
 import com.neo.mobilesafe.service.AddressService;
+import com.neo.mobilesafe.service.CallSmsSafeService;
 import com.neo.mobilesafe.ui.SettingClickView;
 import com.neo.mobilesafe.ui.SettingItemView;
 import com.neo.mobilesafe.utils.ServiceUtils;
@@ -29,6 +30,10 @@ public class SettingActivity extends Activity {
 	// 设置归属地显示框背景
 	private SettingClickView scv_changebg;
 
+	// 设置黑名单
+	private SettingItemView siv_callsms_safe;
+	private Intent callSmsSafeIntent;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -39,51 +44,49 @@ public class SettingActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
 
+		// 1:自动更新条目
+		initUpdateItem();
+
 		/*
-		 * 第一部份 自动更新
+		 * 2. 归属地
 		 */
+		initAddressItem();
 
-		// 实始化
-		siv_update = (SettingItemView) findViewById(R.id.siv_update);
-		siv_update.setTitle("自动升级选项");
-		sp = getSharedPreferences("config", MODE_PRIVATE);
-		boolean update = sp.getBoolean("update", false);
+		// 3.黑名单设置
+		initBlackNumber();
 
-		if (update) {
-			siv_update.setChecked(true);
-			siv_update.setDesc("开启");
+	}
 
+	private void initBlackNumber() {
+		// TODO Auto-generated method stub
+
+		siv_callsms_safe = (SettingItemView) findViewById(R.id.siv_callsms_safe);
+		callSmsSafeIntent = new Intent(this, CallSmsSafeService.class);
+		boolean isServiceRunning = ServiceUtils.isServiceRunning(
+				SettingActivity.this,
+				"com.neo.mobilesafe.service.CallSmsSafeService");
+		if (isServiceRunning) {
+			siv_callsms_safe.setChecked(true);
 		} else {
-			siv_update.setChecked(false);
-			siv_update.setDesc("关闭");
-
+			siv_callsms_safe.setChecked(false);
 		}
-
-		siv_update.setOnClickListener(new OnClickListener() {
-
+		siv_callsms_safe.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Editor editor = sp.edit();
-
-				if (siv_update.isChecked()) {
-					siv_update.setChecked(false);
-					siv_update.setDesc("关闭");
-					editor.putBoolean("update", false);
-
+				// 更变服务状态
+				// TODO Auto-generated method stub
+				if (siv_callsms_safe.isChecked()) {
+					siv_callsms_safe.setChecked(false);
+					stopService(callSmsSafeIntent);
 				} else {
-					siv_update.setChecked(true);
-					siv_update.setDesc("开启");
-					editor.putBoolean("update", true);
-
+					siv_callsms_safe.setChecked(true);
+					startService(callSmsSafeIntent);
 				}
-				editor.commit();
-
 			}
 		});
+	}
 
-		/*
-		 * 第二部份 归属地
-		 */
+	private void initAddressItem() {
 		siv_show_address = (SettingItemView) findViewById(R.id.siv_show_address);
 		showAddress = new Intent(this, AddressService.class);
 		boolean isServiceRunning = ServiceUtils.isServiceRunning(
@@ -147,6 +150,50 @@ public class SettingActivity extends Activity {
 						});
 				builder.setNegativeButton("cancel", null);
 				builder.show();
+			}
+		});
+	}
+
+	private void initUpdateItem() {
+		/*
+		 * 第一部份 自动更新
+		 */
+
+		// 实始化
+		siv_update = (SettingItemView) findViewById(R.id.siv_update);
+		siv_update.setTitle("自动升级选项");
+		sp = getSharedPreferences("config", MODE_PRIVATE);
+		boolean update = sp.getBoolean("update", false);
+
+		if (update) {
+			siv_update.setChecked(true);
+			siv_update.setDesc("开启");
+
+		} else {
+			siv_update.setChecked(false);
+			siv_update.setDesc("关闭");
+
+		}
+
+		siv_update.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Editor editor = sp.edit();
+
+				if (siv_update.isChecked()) {
+					siv_update.setChecked(false);
+					siv_update.setDesc("关闭");
+					editor.putBoolean("update", false);
+
+				} else {
+					siv_update.setChecked(true);
+					siv_update.setDesc("开启");
+					editor.putBoolean("update", true);
+
+				}
+				editor.commit();
+
 			}
 		});
 	}
