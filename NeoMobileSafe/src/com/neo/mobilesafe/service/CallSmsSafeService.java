@@ -7,10 +7,15 @@ import com.neo.mobilesafe.db.dao.BlackNumberDao;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
+import android.provider.CallLog;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
@@ -96,6 +101,13 @@ public class CallSmsSafeService extends Service {
 				if ("1".equals(resultString)||"3".equals(resultString)) {
 					Log.i(TAG, "黑名单电话挂断。。。。");
 					endCall();
+					
+					Uri uri=Uri.parse("content://call_log/calls");
+					getContentResolver().registerContentObserver(uri, true, new CallLogObserver(incomingNumber,new Handler()));
+					
+					//使用内容观察者，观察变化
+					deleteCallog(incomingNumber);
+					
 				}
 				break;
 			}						
@@ -103,6 +115,25 @@ public class CallSmsSafeService extends Service {
 		}		
 	}
 	
+	
+	private class CallLogObserver extends ContentObserver{
+		String incomnum;
+		public CallLogObserver(String inString,Handler handler) {
+			super(handler);
+			this.incomnum=inString;
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			// TODO Auto-generated method stub
+			Log.i(TAG, "内容变化了");
+			getContentResolver().unregisterContentObserver(this);
+			deleteCallog(incomnum);
+			super.onChange(selfChange);
+		}
+		
+	}
 	
 	/*
 	 * 挂断电话
@@ -127,9 +158,7 @@ public class CallSmsSafeService extends Service {
 			Method method=clazz.getDeclaredMethod("getService", String.class);
 			IBinder iBinder=(IBinder) method.invoke(null, TELEPHONY_SERVICE);
 			ITelephony.Stub.asInterface(iBinder).endCall();
-			
 			Log.i(TAG, "挂断电话成功.......");
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,6 +166,15 @@ public class CallSmsSafeService extends Service {
 		
 		
 		
+	}
+
+	private void deleteCallog(String number) {
+		// TODO Auto-generated method stub
+		ContentResolver resolver =getContentResolver();
+		Uri uri=Uri.parse("content://call_log/calls");
+		//Uri uri=CallLog.CONTENT_URI;
+		resolver.delete(uri, "number=?", new String []{number});
+		Log.i(TAG, "册除成功");
 	}
 	
 	
