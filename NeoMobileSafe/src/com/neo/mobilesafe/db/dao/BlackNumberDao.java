@@ -4,10 +4,12 @@ import java.sql.SQLData;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.media.session.PlaybackStateCompat.CustomAction;
 
 import com.neo.mobilesafe.db.BlackNumberDBOpenHelper;
 import com.neo.mobilesafe.domain.BlackNumberInfo;
@@ -153,6 +155,40 @@ public class BlackNumberDao {
 		dbDatabase
 				.delete(BlackNumberTable, "number=?", new String[] { number });
 		dbDatabase.close();
+	}
+	/**
+	 * 
+	 * @param offset  那个位置开始取数据
+	 * @param maxnumber  一次最多获取多少条记录
+	 * @return
+	 */
+	
+	public List<BlackNumberInfo> findPart(int offset,int maxnumber) {
+		//摸拟加载过程
+		
+		try {
+			
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List<BlackNumberInfo> resultBlackNumberInfos =new ArrayList<BlackNumberInfo>();
+		SQLiteDatabase dbDatabase=helper.getReadableDatabase();
+		Cursor cursor=dbDatabase.rawQuery("select number,mode from backnumber order by _id desc limit ? offset", 
+				new String[] {String.valueOf(maxnumber),String.valueOf(offset)});
+		while (cursor.moveToNext()) {
+			BlackNumberInfo info= new BlackNumberInfo();
+			String number=cursor.getString(0);
+			String mode=cursor.getString(0);
+			info.setMode(mode);
+			info.setNumber(number);
+			resultBlackNumberInfos.add(info);
+		}
+		cursor.close();
+		dbDatabase.close();
+		return resultBlackNumberInfos;
 	}
 
 }

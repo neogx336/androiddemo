@@ -1,4 +1,4 @@
-package com.neo.mobilesafe.ui;
+package com.neo.mobilesafe.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;

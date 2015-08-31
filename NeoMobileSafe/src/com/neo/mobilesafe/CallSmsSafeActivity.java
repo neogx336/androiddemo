@@ -12,11 +12,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +42,9 @@ public class CallSmsSafeActivity extends Activity {
 	private List<BlackNumberInfo> infos;
 	private BlackNumberDao dao;
 	private CallSmsSafeAdapter adapter;
+	private int offset=0;
+	private int maxnumber=20;
+	private LinearLayout ll_loading;
 
 	/**
 	 * 自定义对话框所使用的元素
@@ -55,6 +61,7 @@ public class CallSmsSafeActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_call_sms_safe);
+		ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
 		// 初始化界面
 		initView();
 	}
@@ -66,6 +73,86 @@ public class CallSmsSafeActivity extends Activity {
 		infos = dao.findAll();
 		adapter = new CallSmsSafeAdapter();
 		lv_callsms_safe.setAdapter(adapter);
+		// 填充数据
+		fillData();
+
+		// listview 配置监听器
+
+		lv_callsms_safe.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				switch (scrollState) {
+
+				// 空闲状态
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					
+					//当停在空闲段时停在最后一个位置时加载数据
+					int lastposition = lv_callsms_safe.getLastVisiblePosition();
+					if (lastposition == (infos.size() - 1)) {
+						System.out.println("列表被移动到最后一个位置,加载更多的数据...");
+						offset += maxnumber;
+						fillData();
+					}
+
+					break;
+
+				// 惯性滚动的时候
+				case OnScrollListener.SCROLL_STATE_FLING:
+					break;
+				// 手指摸到的时候
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					break;
+
+				default:
+					break;
+				}
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	}
+
+	/**
+	 * 填充数据
+	 */
+	protected void fillData() {
+		ll_loading.setVisibility(View.VISIBLE);
+		new Thread() {
+			public void run() {
+				if (infos == null) {
+					infos = dao.findPart(offset, maxnumber);
+				} else {
+					infos.addAll(dao.findPart(offset, maxnumber));
+				}
+
+				// 线程的小刷新
+				runOnUiThread(new Runnable() {
+					@Override
+					//
+					public void run() {
+						ll_loading.setVisibility(View.INVISIBLE);
+						if (adapter == null) {
+							adapter = new CallSmsSafeAdapter();
+							lv_callsms_safe.setAdapter(adapter);
+						} else {
+							adapter.notifyDataSetChanged();
+						}
+
+					}
+				});
+
+			}
+
+		}.start();
+		;
+
 	}
 
 	// 自定义列表适配器
