@@ -70,7 +70,7 @@
             android:id="@+id/tv_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="用户程序：6个"
+            android:text=""
             android:textColor="#ffffff"
             android:background="#ff888888"
             />

@@ -72,10 +72,14 @@ public class HomeActivity extends Activity {
 					showLostFindDialog();
 					break;
 				case 1:
+					//手机通
 					Intent intent1=new Intent(HomeActivity.this, CallSmsSafeActivity.class);
 					startActivity(intent1);
 					break;
 				case 2:
+					//软件管理
+					Intent intent2=new Intent(HomeActivity.this,AppManagerActivity.class);
+					startActivity(intent2);
 					break;
 				case 3:
 					break;
